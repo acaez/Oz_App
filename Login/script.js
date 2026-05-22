@@ -93,7 +93,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       localStorage.setItem('token', data.token);
       localStorage.setItem('userName', data.name);
       afficherSucces('message', `Bienvenue, ${data.name} !`);
-      setTimeout(() => { window.location.href = '/'; }, 1000);
+      setTimeout(() => { window.location.href = '/Feed/'; }, 1000);
     } else {
       afficherErreur('message', data.error);
     }

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OZ — Library</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="feed.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <!-- Left: hamburger + logo -->
+      <div class="logo-group">
+        <button class="btn-menu" id="btn-menu" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <a href="/Feed/" class="logo">OZ</a>
+      </div>
+
+      <!-- Centre: search -->
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
+          <path d="m14 14 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search books, authors, genres…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="search-clear" class="search-clear hidden" aria-label="Clear search">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M12 4 4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Right: actions -->
+      <div class="header-actions">
+
+        <!-- Add to shelf -->
+        <button class="btn-add" id="btn-add" title="Shelf">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+        </button>
+
+        <!-- Profile (shown when logged in) -->
+        <div class="profile-wrap" id="profile-wrap">
+          <button class="btn-profile" id="btn-profile" aria-label="Account">A</button>
+          <div class="profile-dropdown" id="profile-dropdown" role="menu">
+            <div class="dropdown-user">
+              <span class="dropdown-name" id="dropdown-name">—</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" onclick="logout()">Sign out</button>
+          </div>
+        </div>
+
+        <!-- Login (shown when logged out) -->
+        <a href="/Login/" class="btn-login" id="btn-login" title="Sign in">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M13 7l3 3-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 10H7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M7 4H5a1 1 0 00-1 1v10a1 1 0 001 1h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ── FILTER STRIP ────────────────────────────── -->
+  <div class="filters-strip">
+    <div class="filters-inner">
+      <button class="filter-pill active" data-genre="all">All</button>
+      <button class="filter-pill" data-genre="fiction">Fiction</button>
+      <button class="filter-pill" data-genre="non-fiction">Non-fiction</button>
+      <button class="filter-pill" data-genre="science">Science</button>
+      <button class="filter-pill" data-genre="philosophy">Philosophy</button>
+    </div>
+  </div>
+
+  <!-- ── FEED ───────────────────────────────────── -->
+  <main class="feed-main">
+    <div class="feed-masonry" id="feed-masonry">
+
+      <!-- TYPE 1 — Pure cover : The Great Gatsby -->
+      <article class="book-card type-cover" data-genre="fiction" data-title="The Great Gatsby" data-author="F. Scott Fitzgerald" style="--ca:#c9a055;--cb:#8c5c22;--cc:#3a200a">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="book-cover">
+              <div class="cover-bg"></div>
+              <div class="cover-content">
+                <p class="cover-author">F. Scott Fitzgerald</p>
+                <h2 class="cover-title">The Great<br/>Gatsby</h2>
+                <p class="cover-year">1925</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Fiction</span>
+              <h3 class="back-title">The Great Gatsby</h3>
+              <p class="back-author">F. Scott Fitzgerald · 1925</p>
+              <div class="back-rating">★★★★★</div>
+              <p class="back-synopsis">L'histoire de Jay Gatsby et de son amour obsessionnel pour Daisy Buchanan, vue par Nick Carraway. Un portrait saisissant de l'Amérique des Années Folles et de l'illusion du rêve américain.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 2 — Quote : A Brief History of Time -->
+      <article class="book-card type-quote" data-genre="science" data-title="A Brief History of Time" data-author="Stephen Hawking" style="--ca:#0f2d52;--cb:#091d38;--cc:#040d1a">
+        <div class="card-inner">
+          <div class="card-front">
+            <span class="quote-mark">"</span>
+            <blockquote class="quote-text">Remember to look up at the stars and not down at your feet.</blockquote>
+            <div class="quote-credit">
+              <span class="quote-title">A Brief History of Time</span>
+              <span class="quote-sep">·</span>
+              <span class="quote-author">Stephen Hawking</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Science</span>
+              <h3 class="back-title">A Brief History of Time</h3>
+              <p class="back-author">Stephen Hawking · 1988</p>
+              <div class="back-rating">★★★★★</div>
+              <p class="back-synopsis">Hawking vulgarise les grandes théories de la physique — du Big Bang aux trous noirs — avec une clarté remarquable. Un des livres de science les plus vendus de tous les temps.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 2 — Quote : Meditations -->
+      <article class="book-card type-quote" data-genre="philosophy" data-title="Meditations" data-author="Marcus Aurelius" style="--ca:#5e6e50;--cb:#3d4d34;--cc:#1a2213">
+        <div class="card-inner">
+          <div class="card-front">
+            <span class="quote-mark">"</span>
+            <blockquote class="quote-text">You have power over your mind — not outside events. Realize this, and you will find strength.</blockquote>
+            <div class="quote-credit">
+              <span class="quote-title">Meditations</span>
+              <span class="quote-sep">·</span>
+              <span class="quote-author">Marcus Aurelius</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Philosophy</span>
+              <h3 class="back-title">Meditations</h3>
+              <p class="back-author">Marcus Aurelius · ~170 AD</p>
+              <div class="back-rating">★★★★★</div>
+              <p class="back-synopsis">Journal personnel de l'empereur Marc Aurèle, jamais destiné à être publié. Une méditation sur le devoir, la vertu stoïcienne et l'art de vivre selon sa nature profonde.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 3 — Mini review : Sapiens -->
+      <article class="book-card type-review" data-genre="non-fiction" data-title="Sapiens" data-author="Yuval Noah Harari" style="--ca:#b85c38;--cb:#7c3a1e;--cc:#361508">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="book-cover">
+              <div class="cover-bg"></div>
+              <div class="cover-content">
+                <p class="cover-author">Yuval Noah Harari</p>
+                <h2 class="cover-title">Sapiens</h2>
+                <p class="cover-year">2011</p>
+              </div>
+            </div>
+            <div class="review-body">
+              <h3 class="card-title">Sapiens</h3>
+              <p class="review-text">Harari réécrit l'histoire de l'humanité en quelques centaines de pages. Dense, provocateur, indispensable.</p>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Non-fiction</span>
+              <h3 class="back-title">Sapiens</h3>
+              <p class="back-author">Yuval Noah Harari · 2011</p>
+              <div class="back-rating">★★★★☆</div>
+              <p class="back-synopsis">De l'âge de pierre à l'ère numérique, Harari retrace l'histoire de l'humanité en questionnant ce qui nous distingue vraiment des autres espèces. Provocateur et brillant.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 1 — Pure cover : 1984 -->
+      <article class="book-card type-cover" data-genre="fiction" data-title="1984" data-author="George Orwell" style="--ca:#2a2828;--cb:#1a1818;--cc:#080606">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="book-cover">
+              <div class="cover-bg"></div>
+              <div class="cover-content">
+                <p class="cover-author">George Orwell</p>
+                <h2 class="cover-title-xl">1984</h2>
+                <p class="cover-year">1949</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Fiction</span>
+              <h3 class="back-title">1984</h3>
+              <p class="back-author">George Orwell · 1949</p>
+              <div class="back-rating">★★★★★</div>
+              <p class="back-synopsis">Dans un État totalitaire imaginaire, Winston Smith tente de résister au Parti qui contrôle tout — même la pensée. Un roman prémonitoire sur la surveillance, la propagande et la liberté.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 3 — Mini review : Atomic Habits -->
+      <article class="book-card type-review" data-genre="non-fiction" data-title="Atomic Habits" data-author="James Clear" style="--ca:#1d4ed8;--cb:#1239a8;--cc:#081460">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="book-cover">
+              <div class="cover-bg"></div>
+              <div class="cover-content">
+                <p class="cover-author">James Clear</p>
+                <h2 class="cover-title">Atomic Habits</h2>
+                <p class="cover-year">2018</p>
+              </div>
+            </div>
+            <div class="review-body">
+              <h3 class="card-title">Atomic Habits</h3>
+              <p class="review-text">Le système de Clear est simple mais redoutable. Le livre qui a changé ma façon de voir les habitudes au quotidien.</p>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Non-fiction</span>
+              <h3 class="back-title">Atomic Habits</h3>
+              <p class="back-author">James Clear · 2018</p>
+              <div class="back-rating">★★★★★</div>
+              <p class="back-synopsis">Clear démontre comment de micro-habitudes, accumulées sur le temps, produisent des résultats spectaculaires. Un framework pratique pour construire de bonnes habitudes et briser les mauvaises.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 1 — Pure cover : The Selfish Gene -->
+      <article class="book-card type-cover" data-genre="science" data-title="The Selfish Gene" data-author="Richard Dawkins" style="--ca:#065f46;--cb:#03402e;--cc:#011d14">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="book-cover">
+              <div class="cover-bg"></div>
+              <div class="cover-content">
+                <p class="cover-author">Richard Dawkins</p>
+                <h2 class="cover-title">The Selfish<br/>Gene</h2>
+                <p class="cover-year">1976</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Science</span>
+              <h3 class="back-title">The Selfish Gene</h3>
+              <p class="back-author">Richard Dawkins · 1976</p>
+              <div class="back-rating">★★★★☆</div>
+              <p class="back-synopsis">Dawkins propose une vision radicale de l'évolution : les gènes sont les véritables unités de sélection naturelle. Un livre fondateur qui a transformé notre compréhension de la biologie.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TYPE 2 — Quote : The Alchemist -->
+      <article class="book-card type-quote" data-genre="philosophy" data-title="The Alchemist" data-author="Paulo Coelho" style="--ca:#c47c18;--cb:#8c520a;--cc:#3d2004">
+        <div class="card-inner">
+          <div class="card-front">
+            <span class="quote-mark">"</span>
+            <blockquote class="quote-text">When you want something, all the universe conspires in helping you to achieve it.</blockquote>
+            <div class="quote-credit">
+              <span class="quote-title">The Alchemist</span>
+              <span class="quote-sep">·</span>
+              <span class="quote-author">Paulo Coelho</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="back-body">
+              <span class="back-genre">Philosophy</span>
+              <h3 class="back-title">The Alchemist</h3>
+              <p class="back-author">Paulo Coelho · 1988</p>
+              <div class="back-rating">★★★★☆</div>
+              <p class="back-synopsis">Le voyage initiatique de Santiago, un berger andalou, à la recherche de son destin personnel. Un roman philosophique sur l'écoute de soi, le courage de suivre ses rêves et les signes de l'univers.</p>
+            </div>
+            <button class="save-btn" aria-label="Save to shelf">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="empty-state hidden" id="empty-state">
+      <p>No books found.</p>
+    </div>
+  </main>
+
+  <!-- ── SIDEBAR ──────────────────────────────────── -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <button class="btn-menu sidebar-close" id="sidebar-close" aria-label="Close menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </aside>
+
+  <!-- ── ADD TO SHELF MODAL ───────────────────────── -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add to shelf</h3>
+        <button class="modal-close" id="modal-close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M12 4 4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <p class="modal-sub">Shelf management coming soon.</p>
+    </div>
+  </div>
+
+  <script src="feed.js"></script>
+</body>
+</html>
