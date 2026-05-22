@@ -61,7 +61,7 @@ function afficherSucces(id, texte) {
 
 const API = window.location.hostname === 'localhost'
   ? '/api'
-  : 'https://REMPLACER_PAR_URL_RAILWAY/api';
+  : 'https://landing-production-e5de.up.railway.app/api';
 
 /* ── LOGIN ── */
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
