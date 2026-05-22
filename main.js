@@ -2,6 +2,24 @@
    OZ Library — main.js
 ───────────────────────────────────────── */
 
+// ── Auth guard ────────────────────────────
+(function checkAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = '/Login/';
+    return;
+  }
+  const name = localStorage.getItem('userName');
+  const el   = document.getElementById('nav-username');
+  if (el && name) el.textContent = name;
+})();
+
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('userName');
+  window.location.href = '/Login/';
+}
+
 // ── Droplet renderer ──────────────────────
 function paintDroplets(canvas) {
   const W = canvas.offsetWidth;

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OZ Library — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+
+  <div class="scene">
+    <div class="card" id="card">
+
+      <!-- RECTO : couverture OZ -->
+      <div class="card-front">
+        <div class="front-content">
+          <div class="logo">OZ</div>
+          <p class="cover-label">Welcome to</p>
+          <h1 class="cover-title">OZ Library</h1>
+          <button class="open-btn" id="openBtn">
+            Click to open <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VERSO : login / sign up -->
+      <div class="card-back">
+
+        <!-- Login View -->
+        <div class="back-view active" id="loginView">
+          <h2 class="form-title">Login</h2>
+          <form id="loginForm">
+            <div class="field">
+              <input type="text" id="username" placeholder=" " required>
+              <label for="username">Username or Email</label>
+            </div>
+            <div class="field">
+              <input type="password" id="password" placeholder=" " required>
+              <label for="password">Password</label>
+              <a href="#" class="forgot">Forgot?</a>
+            </div>
+            <button type="submit" class="btn-action">Log in</button>
+          </form>
+          <p class="switch-link">No account? <a href="#" id="goSignup">Sign up</a></p>
+          <p id="message"></p>
+        </div>
+
+        <!-- Sign Up View -->
+        <div class="back-view" id="signupView">
+          <h2 class="form-title">Create account</h2>
+          <form id="signupForm">
+            <div class="field">
+              <input type="text" id="fullname" placeholder=" " required>
+              <label for="fullname">Full name</label>
+            </div>
+            <div class="field">
+              <input type="email" id="signupEmail" placeholder=" " required>
+              <label for="signupEmail">Email</label>
+            </div>
+            <div class="field">
+              <input type="password" id="signupPassword" placeholder=" " required>
+              <label for="signupPassword">Password</label>
+            </div>
+            <div class="field">
+              <input type="text" id="dob" placeholder=" " required>
+              <label for="dob">Date of birth</label>
+            </div>
+            <button type="submit" class="btn-action">Sign up</button>
+          </form>
+          <p class="switch-link">Already a member? <a href="#" id="goLogin">Log in</a></p>
+          <p id="signupMessage"></p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
