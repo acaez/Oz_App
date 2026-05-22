@@ -61,7 +61,7 @@ function afficherSucces(id, texte) {
 
 const API = window.location.hostname === 'localhost'
   ? '/api'
-  : 'https://landing-production-e5de.up.railway.app/api';
+  : 'https://landing-ab4i.onrender.com/api';
 
 /* ── LOGIN ── */
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
