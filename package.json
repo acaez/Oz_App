@@ -4,7 +4,7 @@
   "description": "OZ Library — personal reading library with secure auth",
   "main": "server.js",
   "scripts": {
-    "start": "node --env-file=.env server.js",
+    "start": "node server.js",
     "dev": "node --watch --env-file=.env server.js"
   },
   "repository": {
