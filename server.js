@@ -1,8 +1,9 @@
 require('dotenv').config();
 
-const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
+const express  = require('express');
+const cors     = require('cors');
+const path     = require('path');
+const initDB   = require('./database/init');
 
 // ── Env check ──────────────────────────────
 const REQUIRED_ENV = ['DATABASE_URL', 'JWT_SECRET'];
@@ -30,8 +31,9 @@ app.get('/api/status', (req, res) => {
 });
 
 app.use('/api', require('./routes/auth'));
+app.use('/api', require('./routes/books'));
 
 // ── Start ──────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`Server running → http://localhost:${PORT}`);
-});
+initDB()
+  .then(() => app.listen(PORT, () => console.log(`Server running → http://localhost:${PORT}`)))
+  .catch(err => { console.error('DB init failed:', err); process.exit(1); });
