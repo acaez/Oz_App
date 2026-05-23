@@ -95,8 +95,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     if (res.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userName', data.name);
-      afficherSucces('message', `Bienvenue, ${data.name} !`);
-      setTimeout(() => { window.location.href = '/Feed/'; }, 1000);
+      window.location.href = '/Feed/';
     } else {
       afficherErreur('message', data.error);
     }
