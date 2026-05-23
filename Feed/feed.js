@@ -8,6 +8,9 @@ const API   = window.location.hostname === 'localhost'
 
 const token = localStorage.getItem('token');
 
+// Wake up Render on page load
+fetch(`${API}/status`).catch(() => {});
+
 // ── HTML escape helpers ───────────────────────────────
 function esc(s) {
   return String(s ?? '')
@@ -151,14 +154,26 @@ function renderDropdown(books) {
   `).join('');
 
   searchDrop.querySelectorAll('.drop-add').forEach((btn, i) => {
-    btn.addEventListener('click', async e => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
       if (!token) { window.location.href = '/Login/'; return; }
+
+      // Optimistic UI — update button instantly
       btn.disabled = true;
-      await addToShelf(books[i]);
       btn.innerHTML = '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z"/></svg>';
       btn.classList.add('drop-add--saved');
-      loadFeed();
+
+      // Add card to feed instantly
+      const grid  = document.getElementById('feed-masonry');
+      const empty = document.getElementById('empty-state');
+      const tmp   = document.createElement('div');
+      tmp.innerHTML = cardHTML(books[i]);
+      const newCard = tmp.firstElementChild;
+      grid.prepend(newCard);
+      initCard(newCard);
+      empty.classList.add('hidden');
+
+      addToShelf(books[i]); // fire and forget
     });
   });
 }
@@ -250,14 +265,16 @@ function initCard(card) {
 
   const btn = card.querySelector('.save-btn');
   if (btn) {
-    btn.addEventListener('click', async e => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
       card.style.transition = 'opacity 0.3s';
       card.style.opacity    = '0';
-      await removeFromShelf(card.dataset.id);
-      card.remove();
-      if (!document.querySelector('.book-card'))
-        document.getElementById('empty-state').classList.remove('hidden');
+      removeFromShelf(card.dataset.id); // fire and forget
+      setTimeout(() => {
+        card.remove();
+        if (!document.querySelector('.book-card'))
+          document.getElementById('empty-state').classList.remove('hidden');
+      }, 300);
     });
   }
 }

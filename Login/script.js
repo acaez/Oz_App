@@ -63,6 +63,9 @@ const API = window.location.hostname === 'localhost'
   ? '/api'
   : 'https://landing-ab4i.onrender.com/api';
 
+// Wake up Render before the user submits the form
+fetch(`${API}/status`).catch(() => {});
+
 /* ── LOGIN ── */
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
   e.preventDefault();

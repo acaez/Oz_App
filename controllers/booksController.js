@@ -4,9 +4,17 @@ const SEARCH_URL = 'https://openlibrary.org/search.json';
 const COVER_URL  = 'https://covers.openlibrary.org/b/id';
 const FIELDS     = 'key,title,author_name,cover_i,first_publish_year';
 
+const searchCache = new Map();
+const CACHE_TTL   = 5 * 60 * 1000; // 5 minutes
+
 async function search(req, res) {
-  const q = (req.query.q || '').trim();
+  const q = (req.query.q || '').trim().toLowerCase();
   if (!q) return res.json([]);
+
+  const cached = searchCache.get(q);
+  if (cached && Date.now() - cached.ts < CACHE_TTL) {
+    return res.json(cached.data);
+  }
 
   try {
     const url      = `${SEARCH_URL}?q=${encodeURIComponent(q)}&limit=12&fields=${FIELDS}`;
@@ -25,6 +33,7 @@ async function search(req, res) {
         year:   doc.first_publish_year || null,
       }));
 
+    searchCache.set(q, { data: books, ts: Date.now() });
     res.json(books);
   } catch {
     res.status(502).json({ error: 'Search unavailable' });
