@@ -35,9 +35,9 @@ function set2FAPendingCookie(res, userId) {
 // ── POST /api/auth/register ────────────────────────────────────────────────────
 
 async function register(req, res) {
-  const { name, email, password, dob } = req.body;
+  const { pseudo, email, password, dob } = req.body;
 
-  if (!name || !email || !password || !dob)
+  if (!pseudo || !email || !password || !dob)
     return res.status(400).json({ error: 'All fields are required' });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Invalid email address' });
@@ -62,7 +62,7 @@ async function register(req, res) {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const verifyToken  = crypto.randomBytes(32).toString('hex');
 
-    await User.createUser({ name, email, passwordHash, verifyToken });
+    await User.createUser({ pseudo, email, passwordHash, verifyToken });
 
     // TODO: send verification email with verifyToken
     console.log(`[Auth] Verify token for ${email}: ${verifyToken}`);
@@ -99,7 +99,14 @@ async function login(req, res) {
     }
 
     setAuthCookie(res, user.id);
-    return res.json({ status: 'OK', name: user.name });
+    return res.json({
+      status: 'OK',
+      user: {
+        id:        user.id,
+        pseudo:    user.pseudo,
+        avatarUrl: user.avatar_url,
+      },
+    });
   } catch (err) {
     console.error('[login]', err.message);
     return res.status(500).json({ error: 'Internal server error' });
@@ -117,8 +124,14 @@ function logout(req, res) {
 // ── GET /api/auth/me ───────────────────────────────────────────────────────────
 
 function me(req, res) {
-  const { id, name, email, two_fa_enabled } = req.user;
-  return res.json({ id, name, email, two_fa_enabled });
+  const { id, pseudo, email, avatar_url, two_fa_enabled } = req.user;
+  return res.json({
+    id,
+    pseudo,
+    email,
+    avatarUrl:    avatar_url,
+    twoFaEnabled: two_fa_enabled,
+  });
 }
 
 // ── POST /api/auth/verify-email ────────────────────────────────────────────────

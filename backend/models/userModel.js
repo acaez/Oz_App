@@ -2,11 +2,11 @@ const db = require('../config/db');
 
 // All SQL queries live here — controllers never call db directly
 
-async function createUser({ name, email, passwordHash, verifyToken }) {
+async function createUser({ pseudo, email, passwordHash, verifyToken }) {
   const { rows } = await db.query(
-    `INSERT INTO users (name, email, password_hash, verify_token)
+    `INSERT INTO users (pseudo, email, password_hash, verify_token)
      VALUES ($1, $2, $3, $4) RETURNING id`,
-    [name, email, passwordHash, verifyToken]
+    [pseudo, email, passwordHash, verifyToken]
   );
   return rows[0];
 }
@@ -18,7 +18,7 @@ async function findUserByEmail(email) {
 
 async function findUserById(id) {
   const { rows } = await db.query(
-    'SELECT id, name, email, two_fa_enabled, is_verified FROM users WHERE id = $1',
+    'SELECT id, pseudo, email, avatar_url, two_fa_enabled, is_verified FROM users WHERE id = $1',
     [id]
   );
   return rows[0] || null;

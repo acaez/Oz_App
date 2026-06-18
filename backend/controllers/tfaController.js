@@ -101,7 +101,14 @@ async function verify(req, res) {
     res.clearCookie('2fa_pending', { httpOnly: true, sameSite: 'strict', path: '/api/tfa/verify' });
     setAuthCookie(res, user.id);
 
-    return res.json({ status: 'OK', name: user.name });
+    return res.json({
+      status: 'OK',
+      user: {
+        id:        user.id,
+        pseudo:    user.pseudo,
+        avatarUrl: user.avatar_url,
+      },
+    });
   } catch (err) {
     console.error('[tfa/verify]', err.message);
     return res.status(500).json({ error: 'Internal server error' });

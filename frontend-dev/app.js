@@ -28,13 +28,16 @@ async function request(path, options = {}) {
 /**
  * Créer un compte.
  * POST /api/auth/register
- * @param {{ name: string, email: string, password: string, dob: string }} body
+ * @param {string} pseudo   — nom d'affichage unique (ex: "Xxx_42_xxX")
+ * @param {string} email
+ * @param {string} password
+ * @param {string} dob      — date de naissance (YYYY-MM-DD)
  * @returns {{ message: string }}
  */
-async function register(name, email, password, dob) {
+async function register(pseudo, email, password, dob) {
   return request('/api/auth/register', {
     method: 'POST',
-    body:   JSON.stringify({ name, email, password, dob }),
+    body:   JSON.stringify({ pseudo, email, password, dob }),
   });
 }
 
@@ -42,9 +45,8 @@ async function register(name, email, password, dob) {
  * Se connecter.
  * POST /api/auth/login
  * Deux cas possibles :
- *   → { status: 'OK', name }          : connecté, cookie auth_token posé
- *   → { status: '2FA_REQUIRED' }      : cookie 2fa_pending posé, appeler verify2FA()
- * @param {{ email: string, password: string }} body
+ *   → { status: 'OK', user: { id, pseudo, avatarUrl } }  : connecté, cookie auth_token posé
+ *   → { status: '2FA_REQUIRED' }                         : cookie 2fa_pending posé, appeler verify2FA()
  */
 async function login(email, password) {
   return request('/api/auth/login', {
@@ -64,7 +66,7 @@ async function logout() {
 /**
  * Récupérer l'utilisateur connecté.
  * GET /api/auth/me
- * @returns {{ id, name, email, two_fa_enabled }}
+ * @returns {{ id, pseudo, email, avatarUrl, twoFaEnabled }}
  */
 async function getMe() {
   return request('/api/auth/me');
@@ -128,7 +130,7 @@ async function resendVerification(email) {
  * Le cookie 2fa_pending doit être présent (posé automatiquement au login).
  * POST /api/tfa/verify
  * @param {string} code  — code à 6 chiffres de Google Authenticator
- * @returns {{ status: 'OK', name: string }}
+ * @returns {{ status: 'OK', user: { id, pseudo, avatarUrl } }}
  */
 async function verify2FA(code) {
   return request('/api/tfa/verify', {

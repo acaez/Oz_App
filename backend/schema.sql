@@ -4,9 +4,10 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE IF NOT EXISTS users (
   id              SERIAL        PRIMARY KEY,
-  name            VARCHAR(100)  NOT NULL,
+  pseudo          VARCHAR(50)   UNIQUE NOT NULL,
   email           VARCHAR(255)  UNIQUE NOT NULL,
   password_hash   VARCHAR(255)  NOT NULL,
+  avatar_url      VARCHAR(255)  NOT NULL DEFAULT '/avatars/default.png',
 
   is_verified     BOOLEAN       NOT NULL DEFAULT FALSE,
   verify_token    VARCHAR(255),

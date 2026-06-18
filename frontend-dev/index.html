@@ -15,7 +15,7 @@
   <section>
     <h2>Register</h2>
     <form id="registerForm">
-      <input type="text"     name="name"     placeholder="Full name"     required><br>
+      <input type="text"     name="pseudo"   placeholder="Pseudo (ex: Xxx_42_xxX)" required><br>
       <input type="email"    name="email"    placeholder="Email"         required><br>
       <input type="password" name="password" placeholder="Password"      required><br>
       <input type="date"     name="dob"      placeholder="Date of birth" required><br>
@@ -80,7 +80,7 @@
       e.preventDefault();
       const f = e.target;
       try {
-        const res = await register(f.name.value, f.email.value, f.password.value, f.dob.value);
+        const res = await register(f.pseudo.value, f.email.value, f.password.value, f.dob.value);
         msg('registerMsg', res.message, false);
       } catch (err) { msg('registerMsg', err.message, true); }
     });
@@ -95,7 +95,7 @@
           document.getElementById('tfaSection').style.display = 'block';
           msg('loginMsg', '2FA requis — entrez votre code TOTP', false);
         } else {
-          msg('loginMsg', `Connecté en tant que ${res.name}`, false);
+          msg('loginMsg', `Connecté en tant que ${res.user.pseudo}`, false);
           setTimeout(() => window.location.href = 'dashboard.html', 800);
         }
       } catch (err) { msg('loginMsg', err.message, true); }
@@ -106,7 +106,7 @@
       e.preventDefault();
       try {
         const res = await verify2FA(e.target.code.value);
-        msg('tfaMsg', `Connecté en tant que ${res.name}`, false);
+        msg('tfaMsg', `Connecté en tant que ${res.user.pseudo}`, false);
         setTimeout(() => window.location.href = 'dashboard.html', 800);
       } catch (err) { msg('tfaMsg', err.message, true); }
     });
