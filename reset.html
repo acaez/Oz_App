@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OZ Library — Reset Password</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script defer src="reset.js"></script>
+</head>
+
+<body>
+
+  <div class="scene">
+    <div class="card card-reset">
+
+      <div class="card-back" style="transform: none; pointer-events: auto;">
+        <div class="back-view active" id="resetView">
+          <h2 class="form-title">New password</h2>
+          <p class="verify-text" style="text-align:center; margin-bottom: 24px;">Choose a strong password for your account.</p>
+          <form id="resetForm" novalidate>
+            <div class="field">
+              <div class="input-wrap">
+                <input type="password" id="newPassword" placeholder="New password" required>
+                <button type="button" class="toggle-pw" tabindex="-1" data-target="newPassword" aria-label="Show password">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <div class="input-wrap">
+                <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                <button type="button" class="toggle-pw" tabindex="-1" data-target="confirmPassword" aria-label="Show password">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn-action">Reset password</button>
+          </form>
+          <p class="switch-link"><a href="index.html">Back to Log in</a></p>
+          <p id="resetMessage"></p>
+        </div>
+
+        <div class="back-view" id="resetSuccessView">
+          <div class="verify-content">
+            <svg class="verify-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <h2 class="form-title">Password updated!</h2>
+            <p class="verify-text">Your password has been reset successfully.</p>
+            <a href="index.html" class="btn-action" style="display:block; text-align:center; text-decoration:none; padding: 13px 0; margin-top: 8px;">Log in</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

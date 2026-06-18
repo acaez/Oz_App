@@ -43,6 +43,10 @@ body::before {
   border-radius: 16px;
 }
 
+.card-reset {
+  height: auto;
+}
+
 .card.flipped {
   transform: rotateY(-180deg);
 }
@@ -146,7 +150,7 @@ body::before {
   white-space: nowrap;
   background: rgba(255,255,255,0.85);
   border: 1.5px solid #ffffff;
-  border-radius: 50px;
+  border-radius: 16px;
   color: #1a1a1a;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.68rem;
@@ -198,7 +202,7 @@ body::before {
 .back-view {
   display: none;
   width: 100%;
-  padding: 38px 28px 28px;
+  padding: 38px 42px 28px;
   position: relative;
   z-index: 1;
 }
@@ -206,6 +210,8 @@ body::before {
 .back-view.active {
   display: block;
   animation: viewIn 0.3s ease;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 @keyframes viewIn {
@@ -218,7 +224,7 @@ body::before {
 
 .form-title {
   font-size: 1.8rem;
-  font-weight: 400;
+  font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 28px;
   text-align: center;
@@ -238,7 +244,7 @@ form {
 
 .field input {
   border: none;
-  border-radius: 50px;
+  border-radius: 16px;
   background: rgba(255,255,255,0.38);
   padding: 14px 22px;
   font-family: 'Montserrat', sans-serif;
@@ -265,10 +271,41 @@ form {
   gap: 6px;
 }
 
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #999;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.toggle-pw:hover { color: #444; }
+
+.toggle-pw svg {
+  width: 18px;
+  height: 18px;
+}
+
 .forgot {
   align-self: flex-end;
   font-size: 0.68rem;
-  color: #bbb;
+  color: #777;
   text-decoration: none;
   font-family: 'Montserrat', sans-serif;
   transition: color 0.2s;
@@ -284,7 +321,7 @@ form {
   background: #1e1e1e;
   color: #ffffff;
   border: none;
-  border-radius: 50px;
+  border-radius: 16px;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
@@ -298,11 +335,52 @@ form {
   background: #3a3a3a;
 }
 
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 14px;
+  color: #999;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.15);
+}
+
+.btn-google {
+  width: 100%;
+  padding: 13px 0;
+  background: rgba(255,255,255,0.38);
+  border: none;
+  border-radius: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.25s;
+}
+
+.btn-google:hover {
+  background: rgba(255,255,255,0.58);
+}
+
 .switch-link {
-  margin-top: 18px;
+  margin-top: 32px;
   font-size: 0.72rem;
   font-weight: 300;
-  color: #aaa;
+  color: #777;
   text-align: center;
 }
 
@@ -316,10 +394,37 @@ form {
 
 .field input[type="date"] { cursor: pointer; }
 
-#message,
-#signupMessage {
-  margin-top: 10px;
+.verify-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding-top: 20px;
+}
+
+.verify-icon {
+  width: 56px;
+  height: 56px;
+  color: #3a2a1a;
+  margin-bottom: 8px;
+}
+
+.verify-text {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #777;
+  line-height: 1.6;
+}
+
+.verify-text span {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.form-message {
   font-size: 0.72rem;
   text-align: center;
-  min-height: 18px;
+  min-height: 16px;
+  margin-top: 4px;
 }
