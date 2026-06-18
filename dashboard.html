@@ -81,13 +81,13 @@
   </div>
 
   <script>
-    const token = localStorage.getItem('token');
-    const name  = localStorage.getItem('userName');
-    if (!token) { window.location.href = 'index.html'; }
-    document.getElementById('dashName').textContent = name || 'User';
+    const pseudo    = localStorage.getItem('userPseudo');
+    const avatarUrl = localStorage.getItem('userAvatarUrl');
+    if (!pseudo) { window.location.href = 'index.html'; }
+    document.getElementById('dashName').textContent = pseudo || 'User';
     document.getElementById('logoutBtn').addEventListener('click', function() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userName');
+      localStorage.removeItem('userPseudo');
+      localStorage.removeItem('userAvatarUrl');
       window.location.href = 'index.html';
     });
   </script>

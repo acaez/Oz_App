@@ -14,10 +14,11 @@ const OZ_CONFIG = {
   // ── Demo mode ──────────────────────────────────────────────────────────────
   // Set enabled: false in production
   demo: {
-    enabled: true,
-    email:    'demo@oz.com',
-    password: 'Demo123!',
-    name:     'Demo User',
+    enabled:   true,
+    email:     'demo@oz.com',
+    password:  'Demo123!',
+    pseudo:    'DemoUser_42',
+    avatarUrl: '/avatars/default.png',
   },
 
 };

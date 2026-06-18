@@ -141,8 +141,8 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   // Demo mode bypass
   const demo = OZ_CONFIG?.demo;
   if (demo?.enabled && email === demo.email && password === demo.password) {
-    localStorage.setItem('token',    'demo-token');
-    localStorage.setItem('userName', demo.name);
+    localStorage.setItem('userPseudo',    demo.pseudo);
+    localStorage.setItem('userAvatarUrl', demo.avatarUrl);
     window.location.href = OZ_CONFIG.redirectAfterLogin;
     return;
   }
@@ -155,8 +155,8 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     });
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem('token',    data.token);
-      localStorage.setItem('userName', data.name);
+      localStorage.setItem('userPseudo',   data.user.pseudo);
+      localStorage.setItem('userAvatarUrl', data.user.avatarUrl);
       window.location.href = OZ_CONFIG.redirectAfterLogin;
     } else {
       showError('message', data.error || 'Login failed.');
