@@ -248,8 +248,8 @@ document.getElementById('forgotForm').addEventListener('submit', async function 
 
   const email = document.getElementById('forgotEmail').value.trim();
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    return showError('forgotMessage', 'Invalid email address.');
+  if (!email)
+    return showError('forgotMessage', 'Enter your email or pseudo.');
 
   try {
     const { ok, data } = await ozApi('/auth/forgot-password', { method: 'POST', body: { email } });

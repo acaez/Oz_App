@@ -38,7 +38,7 @@
           <h2 class="form-title">Login</h2>
           <form id="loginForm" novalidate>
             <div class="field">
-              <input type="email" id="username" placeholder="Email" autocomplete="email" required>
+              <input type="text" id="username" placeholder="Email or pseudo" autocomplete="username" autocapitalize="none" required>
             </div>
             <div class="field field-password">
               <div class="input-wrap">
@@ -98,10 +98,10 @@
         <!-- Forgot Password View -->
         <div class="back-view" id="forgotView">
           <h2 class="form-title">Forgot password?</h2>
-          <p class="verify-text" style="text-align:center; margin-bottom: 24px;">Enter your email and we'll send you a reset link.</p>
+          <p class="verify-text" style="text-align:center; margin-bottom: 24px;">Enter your email or pseudo to reset your password.</p>
           <form id="forgotForm" novalidate>
             <div class="field">
-              <input type="email" id="forgotEmail" placeholder="Email" required>
+              <input type="text" id="forgotEmail" placeholder="Email or pseudo" autocapitalize="none" required>
             </div>
             <p id="forgotMessage" class="form-message"></p>
             <button type="submit" class="btn-action">Send reset link</button>

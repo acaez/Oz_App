@@ -19,6 +19,15 @@ async function findUserByEmail(email) {
   return rows[0] || null;
 }
 
+// Login identifier: email or pseudo (both case-insensitive)
+async function findUserByLogin(identifier) {
+  const { rows } = await db.query(
+    'SELECT * FROM users WHERE email = $1 OR lower(pseudo) = $1',
+    [normEmail(identifier)]
+  );
+  return rows[0] || null;
+}
+
 async function findUserById(id) {
   const { rows } = await db.query(
     'SELECT id, pseudo, email, avatar_url, two_fa_enabled, is_verified FROM users WHERE id = $1',
@@ -45,10 +54,10 @@ async function setNewVerifyToken(userId, verifyToken) {
   await db.query('UPDATE users SET verify_token = $1 WHERE id = $2', [verifyToken, userId]);
 }
 
-async function setResetToken(email, resetToken, resetExpires) {
+async function setResetToken(userId, resetToken, resetExpires) {
   await db.query(
-    'UPDATE users SET reset_token = $1, reset_expires = $2 WHERE email = $3',
-    [resetToken, resetExpires, normEmail(email)]
+    'UPDATE users SET reset_token = $1, reset_expires = $2 WHERE id = $3',
+    [resetToken, resetExpires, userId]
   );
 }
 
@@ -85,6 +94,7 @@ async function disable2FA(userId) {
 module.exports = {
   createUser,
   findUserByEmail,
+  findUserByLogin,
   findUserById,
   findUserByIdFull,
   setEmailVerified,

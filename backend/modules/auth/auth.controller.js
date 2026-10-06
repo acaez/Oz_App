@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const User   = require('./user.model');
 
 const SALT_ROUNDS = 12;
+// Local dev without email service: links go straight to the browser
+const DEV_NO_EMAIL = () => process.env.EMAIL_VERIFICATION === 'false' && process.env.NODE_ENV !== 'production';
 const APP_URL     = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
 
 // ── Cookie helpers ─────────────────────────────────────────────────────────────
@@ -86,13 +88,13 @@ async function register(req, res) {
 // ── POST /api/auth/login ───────────────────────────────────────────────────────
 
 async function login(req, res) {
-  const { email, password } = req.body;
+  const { email, password } = req.body; // email field accepts email or pseudo
 
   if (!email || !password)
     return res.status(400).json({ error: 'Email and password are required' });
 
   try {
-    const user = await User.findUserByEmail(email);
+    const user = await User.findUserByLogin(email);
 
     // Generic error — no user enumeration
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
@@ -171,17 +173,18 @@ async function forgotPassword(req, res) {
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
   try {
-    const user = await User.findUserByEmail(email);
+    const user = await User.findUserByLogin(email); // email or pseudo
     if (user) {
       const resetToken   = crypto.randomBytes(32).toString('hex');
       const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1h
-      await User.setResetToken(email, resetToken, resetExpires);
-      // TODO: sendResetEmail(email, resetToken)
+      await User.setResetToken(user.id, resetToken, resetExpires);
+      // TODO: sendResetEmail(user.email, resetToken)
       const resetUrl = `/auth/reset.html?token=${resetToken}`;
-      // Local dev without email service → hand the link straight to the browser
-      if (process.env.EMAIL_VERIFICATION === 'false' && process.env.NODE_ENV !== 'production')
+      if (DEV_NO_EMAIL())
         return res.json({ message: 'Redirecting to reset page…', resetUrl });
-      console.log(`[Auth] Reset link for ${email}: ${APP_URL}${resetUrl}`);
+      console.log(`[Auth] Reset link for ${user.email}: ${APP_URL}${resetUrl}`);
+    } else if (DEV_NO_EMAIL()) {
+      return res.status(404).json({ error: 'No account with this email or pseudo.' });
     }
     // Always return success — no user enumeration
     return res.json({ message: 'If this email exists, a reset link has been sent.' });

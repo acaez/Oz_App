@@ -22,6 +22,9 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at      TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
 
+-- Pseudo unique regardless of case (login accepts pseudo case-insensitively)
+CREATE UNIQUE INDEX IF NOT EXISTS users_pseudo_lower_idx ON users (lower(pseudo));
+
 CREATE OR REPLACE FUNCTION fn_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
