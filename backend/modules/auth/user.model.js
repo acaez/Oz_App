@@ -2,17 +2,20 @@ const db = require('../../config/db');
 
 // All SQL queries live here — controllers never call db directly
 
+// Emails are stored and looked up lowercase/trimmed → login is case-insensitive
+const normEmail = (email) => String(email).trim().toLowerCase();
+
 async function createUser({ pseudo, email, passwordHash, verifyToken }) {
   const { rows } = await db.query(
     `INSERT INTO users (pseudo, email, password_hash, verify_token)
      VALUES ($1, $2, $3, $4) RETURNING id`,
-    [pseudo, email, passwordHash, verifyToken]
+    [pseudo.trim(), normEmail(email), passwordHash, verifyToken]
   );
   return rows[0];
 }
 
 async function findUserByEmail(email) {
-  const { rows } = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+  const { rows } = await db.query('SELECT * FROM users WHERE email = $1', [normEmail(email)]);
   return rows[0] || null;
 }
 
@@ -45,7 +48,7 @@ async function setNewVerifyToken(userId, verifyToken) {
 async function setResetToken(email, resetToken, resetExpires) {
   await db.query(
     'UPDATE users SET reset_token = $1, reset_expires = $2 WHERE email = $3',
-    [resetToken, resetExpires, email]
+    [resetToken, resetExpires, normEmail(email)]
   );
 }
 

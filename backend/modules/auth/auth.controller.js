@@ -95,8 +95,11 @@ async function login(req, res) {
     const user = await User.findUserByEmail(email);
 
     // Generic error — no user enumeration
-    if (!user || !(await bcrypt.compare(password, user.password_hash)))
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      if (process.env.NODE_ENV !== 'production')
+        console.log(`[Auth] Login failed for "${email}": ${user ? 'wrong password' : 'unknown email'}`);
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
     if (!user.is_verified)
       return res.status(403).json({ error: 'Please verify your email before logging in' });
@@ -174,7 +177,11 @@ async function forgotPassword(req, res) {
       const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1h
       await User.setResetToken(email, resetToken, resetExpires);
       // TODO: sendResetEmail(email, resetToken)
-      console.log(`[Auth] Reset link for ${email}: ${APP_URL}/auth/reset.html?token=${resetToken}`);
+      const resetUrl = `/auth/reset.html?token=${resetToken}`;
+      // Local dev without email service → hand the link straight to the browser
+      if (process.env.EMAIL_VERIFICATION === 'false' && process.env.NODE_ENV !== 'production')
+        return res.json({ message: 'Redirecting to reset page…', resetUrl });
+      console.log(`[Auth] Reset link for ${email}: ${APP_URL}${resetUrl}`);
     }
     // Always return success — no user enumeration
     return res.json({ message: 'If this email exists, a reset link has been sent.' });

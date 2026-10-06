@@ -253,7 +253,9 @@ document.getElementById('forgotForm').addEventListener('submit', async function 
 
   try {
     const { ok, data } = await ozApi('/auth/forgot-password', { method: 'POST', body: { email } });
-    if (ok) {
+    if (ok && data.resetUrl) {
+      window.location.href = data.resetUrl;
+    } else if (ok) {
       showSuccess('forgotMessage', 'Reset link sent! Check your inbox.');
       this.reset();
     } else {
