@@ -1,9 +1,10 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const crypto = require('crypto');
-const User   = require('../models/userModel');
+const User   = require('./user.model');
 
 const SALT_ROUNDS = 12;
+const APP_URL     = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
 
 // ── Cookie helpers ─────────────────────────────────────────────────────────────
 
@@ -65,7 +66,7 @@ async function register(req, res) {
     await User.createUser({ pseudo, email, passwordHash, verifyToken });
 
     // TODO: send verification email with verifyToken
-    console.log(`[Auth] Verify token for ${email}: ${verifyToken}`);
+    console.log(`[Auth] Verify link for ${email}: ${APP_URL}/auth/verify.html?token=${verifyToken}`);
 
     return res.status(201).json({ message: 'Account created. Please check your email to verify.' });
   } catch (err) {
@@ -165,7 +166,7 @@ async function forgotPassword(req, res) {
       const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1h
       await User.setResetToken(email, resetToken, resetExpires);
       // TODO: sendResetEmail(email, resetToken)
-      console.log(`[Auth] Reset token for ${email}: ${resetToken}`);
+      console.log(`[Auth] Reset link for ${email}: ${APP_URL}/auth/reset.html?token=${resetToken}`);
     }
     // Always return success — no user enumeration
     return res.json({ message: 'If this email exists, a reset link has been sent.' });
@@ -216,7 +217,7 @@ async function resendVerification(req, res) {
       const verifyToken = crypto.randomBytes(32).toString('hex');
       await User.setNewVerifyToken(user.id, verifyToken);
       // TODO: sendVerificationEmail(email, verifyToken)
-      console.log(`[Auth] New verify token for ${email}: ${verifyToken}`);
+      console.log(`[Auth] Verify link for ${email}: ${APP_URL}/auth/verify.html?token=${verifyToken}`);
     }
     return res.json({ message: 'If this email is pending verification, a new link has been sent.' });
   } catch (err) {

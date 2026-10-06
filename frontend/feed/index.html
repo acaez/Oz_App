@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/Feed/feed.css" />
+  <link rel="stylesheet" href="/feed/feed.css" />
 </head>
 <body>
 
@@ -24,7 +24,7 @@
           <span></span>
           <span></span>
         </button>
-        <a href="/Feed/" class="logo">OZ</a>
+        <a href="/feed/" class="logo">OZ</a>
       </div>
 
       <!-- Centre: search -->
@@ -64,12 +64,12 @@
               <span class="dropdown-name" id="dropdown-name">—</span>
             </div>
             <div class="dropdown-divider"></div>
-            <button class="dropdown-item" onclick="logout()">Sign out</button>
+            <button class="dropdown-item" id="btn-logout">Sign out</button>
           </div>
         </div>
 
         <!-- Login (shown when logged out) -->
-        <a href="/Login/" class="btn-login" id="btn-login" title="Sign in">
+        <a href="/auth/" class="btn-login" id="btn-login" title="Sign in">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M13 7l3 3-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M16 10H7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -124,6 +124,8 @@
     </div>
   </div>
 
-  <script src="/Feed/feed.js"></script>
+  <script src="/shared/config.js"></script>
+  <script src="/shared/api.js"></script>
+  <script src="/feed/feed.js"></script>
 </body>
 </html>

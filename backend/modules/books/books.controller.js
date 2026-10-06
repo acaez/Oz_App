@@ -1,4 +1,4 @@
-const db = require('../database/db');
+const db = require('../../config/db');
 
 const SEARCH_URL = 'https://openlibrary.org/search.json';
 const COVER_URL  = 'https://covers.openlibrary.org/b/id';

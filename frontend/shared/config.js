@@ -1,24 +1,20 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   OZ Library — shared config (loaded first by every page)
+───────────────────────────────────────────────────────────────────────────── */
+
 const OZ_CONFIG = {
 
   // ── API ────────────────────────────────────────────────────────────────────
-  api: window.location.hostname === 'localhost'
-    ? '/api'
-    : 'https://landing-ab4i.onrender.com/api',
+  // Front and API are served by the same server → relative path, cookies just work
+  api: '/api',
 
   // ── Navigation ─────────────────────────────────────────────────────────────
-  redirectAfterLogin: 'dashboard.html',
+  routes: {
+    login: '/auth/',
+    home:  '/feed/',
+  },
 
   // ── Branding ───────────────────────────────────────────────────────────────
   brand: 'OZ Library',
-
-  // ── Demo mode ──────────────────────────────────────────────────────────────
-  // Set enabled: false in production
-  demo: {
-    enabled:   true,
-    email:     'demo@oz.com',
-    password:  'Demo123!',
-    pseudo:    'DemoUser_42',
-    avatarUrl: '/avatars/default.png',
-  },
 
 };

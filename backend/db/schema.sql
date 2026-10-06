@@ -1,4 +1,4 @@
--- Run: psql -U postgres -d auth_db -f schema.sql
+-- Run: npm run db:init  (or: psql "$DATABASE_URL" -f db/schema.sql)
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
@@ -34,3 +34,17 @@ DROP TRIGGER IF EXISTS trg_users_updated_at ON users;
 CREATE TRIGGER trg_users_updated_at
   BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE FUNCTION fn_updated_at();
+
+-- ── Books module ─────────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS shelf (
+  id        SERIAL      PRIMARY KEY,
+  user_id   INTEGER     NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  ol_id     TEXT        NOT NULL,
+  title     TEXT        NOT NULL,
+  author    TEXT        NOT NULL,
+  cover     TEXT,
+  year      INTEGER,
+  saved_at  TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (user_id, ol_id)
+);

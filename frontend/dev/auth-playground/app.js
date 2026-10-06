@@ -8,7 +8,7 @@
    - Modifier uniquement BASE_URL selon l'environnement
 ============================================================================= */
 
-const BASE_URL = 'http://localhost:3000'; // ← changer en prod
+const BASE_URL = ''; // servi par le backend OZ → même origine
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {

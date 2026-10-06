@@ -1,16 +1,17 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    OZ Library — Login Plugin
-   Depends on: config.js (must be loaded before this script)
+   Depends on: shared/config.js, shared/api.js
 ───────────────────────────────────────────────────────────────────────────── */
 
-const API = (typeof OZ_CONFIG !== 'undefined')
-  ? OZ_CONFIG.api
-  : (window.location.hostname === 'localhost'
-      ? '/api'
-      : 'https://landing-ab4i.onrender.com/api');
+// Already logged in → skip the login page
+OZ_SESSION.fetchMe().then(user => {
+  if (user) window.location.replace(OZ_CONFIG.routes.home);
+});
 
-// Warm up the backend (Render free tier spins down after inactivity)
-fetch(`${API}/status`).catch(() => {});
+function onLoggedIn(user) {
+  OZ_SESSION.save(user);
+  window.location.href = OZ_CONFIG.routes.home;
+}
 
 /* ── DOM refs ── */
 const card  = document.getElementById('card');
@@ -79,6 +80,11 @@ document.getElementById('goLoginFromVerify').addEventListener('click', function 
   switchView('verifyView', 'loginView');
 });
 
+document.getElementById('goLoginFromTfa').addEventListener('click', function (e) {
+  e.preventDefault();
+  switchView('tfaView', 'loginView');
+});
+
 /* ─────────────────────────────────────────────────────────────────────────────
    UI HELPERS
 ───────────────────────────────────────────────────────────────────────────── */
@@ -138,31 +144,43 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   if (!email || !password)
     return showError('message', 'Please fill in all fields.');
 
-  // Demo mode bypass
-  const demo = OZ_CONFIG?.demo;
-  if (demo?.enabled && email === demo.email && password === demo.password) {
-    localStorage.setItem('userPseudo',    demo.pseudo);
-    localStorage.setItem('userAvatarUrl', demo.avatarUrl);
-    window.location.href = OZ_CONFIG.redirectAfterLogin;
-    return;
-  }
-
   try {
-    const res  = await fetch(`${API}/login`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email, password }),
+    const { ok, data } = await ozApi('/auth/login', {
+      method: 'POST',
+      body:   { email, password },
     });
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem('userPseudo',   data.user.pseudo);
-      localStorage.setItem('userAvatarUrl', data.user.avatarUrl);
-      window.location.href = OZ_CONFIG.redirectAfterLogin;
-    } else {
-      showError('message', data.error || 'Login failed.');
+    if (!ok)
+      return showError('message', data.error || 'Login failed.');
+
+    if (data.status === '2FA_REQUIRED') {
+      switchView('loginView', 'tfaView');
+      document.getElementById('tfaCode').focus();
+      return;
     }
+    onLoggedIn(data.user);
   } catch {
     showError('message', 'Cannot reach the server. Please try again.');
+  }
+});
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2FA — step 2 of login (TOTP code)
+───────────────────────────────────────────────────────────────────────────── */
+
+document.getElementById('tfaForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  clearMessage('tfaMessage');
+
+  const code = document.getElementById('tfaCode').value.replace(/\s/g, '');
+  if (!/^\d{6}$/.test(code))
+    return showError('tfaMessage', 'Enter the 6-digit code from your app.');
+
+  try {
+    const { ok, data } = await ozApi('/tfa/verify', { method: 'POST', body: { code } });
+    if (ok) onLoggedIn(data.user);
+    else    showError('tfaMessage', data.error || 'Invalid code.');
+  } catch {
+    showError('tfaMessage', 'Cannot reach the server. Please try again.');
   }
 });
 
@@ -174,12 +192,12 @@ document.getElementById('signupForm').addEventListener('submit', async function 
   e.preventDefault();
   clearMessage('signupMessage');
 
-  const name     = document.getElementById('fullname').value.trim();
+  const pseudo   = document.getElementById('pseudo').value.trim();
   const email    = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPassword').value;
   const dob      = document.getElementById('dob').value;
 
-  if (!name || !email || !password || !dob)
+  if (!pseudo || !email || !password || !dob)
     return showError('signupMessage', 'Please fill in all fields.');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return showError('signupMessage', 'Invalid email address.');
@@ -199,13 +217,11 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     return showError('signupMessage', 'You must be at least 18 years old.');
 
   try {
-    const res  = await fetch(`${API}/signup`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ name, email, password, dob }),
+    const { ok, data } = await ozApi('/auth/register', {
+      method: 'POST',
+      body:   { pseudo, email, password, dob },
     });
-    const data = await res.json();
-    if (res.ok) {
+    if (ok) {
       document.getElementById('verifyEmail').textContent = email;
       switchView('signupView', 'verifyView');
     } else {
@@ -230,13 +246,8 @@ document.getElementById('forgotForm').addEventListener('submit', async function 
     return showError('forgotMessage', 'Invalid email address.');
 
   try {
-    const res  = await fetch(`${API}/forgot-password`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email }),
-    });
-    const data = await res.json();
-    if (res.ok) {
+    const { ok, data } = await ozApi('/auth/forgot-password', { method: 'POST', body: { email } });
+    if (ok) {
       showSuccess('forgotMessage', 'Reset link sent! Check your inbox.');
       this.reset();
     } else {
@@ -256,9 +267,5 @@ document.getElementById('resendBtn').addEventListener('click', async function ()
   this.textContent = 'Sent!';
   this.disabled    = true;
   setTimeout(() => { this.textContent = 'Resend email'; this.disabled = false; }, 3000);
-  fetch(`${API}/resend-verification`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ email }),
-  }).catch(() => {});
+  ozApi('/auth/resend-verification', { method: 'POST', body: { email } }).catch(() => {});
 });

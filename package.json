@@ -1,0 +1,11 @@
+{
+  "name": "oz-app",
+  "private": true,
+  "description": "OZ Library — monorepo (backend API + frontend statique)",
+  "scripts": {
+    "setup":   "npm --prefix backend install",
+    "dev":     "npm --prefix backend run dev",
+    "start":   "npm --prefix backend start",
+    "db:init": "npm --prefix backend run db:init"
+  }
+}

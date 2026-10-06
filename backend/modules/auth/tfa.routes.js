@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { requireAuth, require2FAPending } = require('../middlewares/authMiddleware');
-const { setup, activate, verify, disable } = require('../controllers/tfaController');
+const { requireAuth, require2FAPending } = require('../../shared/requireAuth');
+const { setup, activate, verify, disable } = require('./tfa.controller');
 
 // Step 2 of login — requires 2fa_pending cookie
 router.post('/verify', require2FAPending, verify);

@@ -1,5 +1,5 @@
 const jwt  = require('jsonwebtoken');
-const User = require('../models/userModel');
+const User = require('../modules/auth/user.model');
 
 // ── requireAuth ────────────────────────────────────────────────────────────────
 // Verifies the auth_token HttpOnly cookie.

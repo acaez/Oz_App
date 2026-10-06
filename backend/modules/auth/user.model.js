@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../../config/db');
 
 // All SQL queries live here — controllers never call db directly
 

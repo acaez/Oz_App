@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { requireAuth } = require('../middlewares/authMiddleware');
+const { requireAuth } = require('../../shared/requireAuth');
 const {
   register,
   login,
@@ -9,7 +9,7 @@ const {
   forgotPassword,
   resetPassword,
   resendVerification,
-} = require('../controllers/authController');
+} = require('./auth.controller');
 
 // Public
 router.post('/register',             register);
@@ -20,7 +20,7 @@ router.post('/reset-password',       resetPassword);
 router.post('/resend-verification',  resendVerification);
 
 // Protected
-router.post('/logout', requireAuth, logout);
+router.post('/logout', logout);
 router.get('/me',      requireAuth, me);
 
 module.exports = router;

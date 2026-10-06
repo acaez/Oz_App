@@ -1,9 +1,8 @@
-const API = OZ_CONFIG.api;
 
 const token = new URLSearchParams(window.location.search).get('token');
 
 if (!token) {
-  window.location.href = 'index.html';
+  window.location.href = OZ_CONFIG.routes.login;
 }
 
 /* ── SHOW / HIDE PASSWORD ── */
@@ -44,13 +43,8 @@ document.getElementById('resetForm').addEventListener('submit', async function(e
     return afficherErreur('resetMessage', 'Les mots de passe ne correspondent pas.');
 
   try {
-    const res  = await fetch(`${API}/reset-password`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ token, password }),
-    });
-    const data = await res.json();
-    if (res.ok) {
+    const { ok, data } = await ozApi('/auth/reset-password', { method: 'POST', body: { token, password } });
+    if (ok) {
       document.getElementById('resetView').classList.remove('active');
       document.getElementById('resetSuccessView').classList.add('active');
     } else {

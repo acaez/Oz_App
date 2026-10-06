@@ -1,8 +1,8 @@
 const speakeasy = require('speakeasy');
 const qrcode    = require('qrcode');
-const bcrypt    = require('bcrypt');
+const bcrypt    = require('bcryptjs');
 const jwt       = require('jsonwebtoken');
-const User      = require('../models/userModel');
+const User      = require('./user.model');
 
 function setAuthCookie(res, userId) {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {

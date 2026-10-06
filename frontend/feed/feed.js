@@ -2,14 +2,9 @@
    OZ Feed — feed.js
 ───────────────────────────────────────────────────────── */
 
-const API   = window.location.hostname === 'localhost'
-  ? '/api'
-  : 'https://landing-ab4i.onrender.com/api';
+// Depends on: shared/config.js, shared/api.js
 
-const token = localStorage.getItem('token');
-
-// Wake up Render on page load
-fetch(`${API}/status`).catch(() => {});
+let currentUser = OZ_SESSION.cached(); // instant UI, confirmed by fetchMe() at boot
 
 // ── HTML escape helpers ───────────────────────────────
 function esc(s) {
@@ -19,24 +14,16 @@ function esc(s) {
 }
 
 // ── Auth / header init ────────────────────────────────
-(function initHeader() {
-  const name    = localStorage.getItem('userName') || 'Guest';
+function renderHeader() {
+  const name    = currentUser?.pseudo || 'Guest';
   const initial = name.trim()[0]?.toUpperCase() || '?';
   document.getElementById('btn-profile').textContent = initial;
   document.getElementById('dropdown-name').textContent = name;
-
-  if (!token) {
-    document.getElementById('btn-login').classList.remove('hidden');
-  } else {
-    document.getElementById('btn-login').classList.add('hidden');
-  }
-})();
-
-function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('userName');
-  window.location.href = '/Login/';
+  document.getElementById('btn-login').classList.toggle('hidden', !!currentUser);
 }
+renderHeader();
+
+document.getElementById('btn-logout').addEventListener('click', ozLogout);
 
 // ── Sidebar ───────────────────────────────────────────
 const btnMenu        = document.getElementById('btn-menu');
@@ -124,8 +111,7 @@ async function fetchSearch(q) {
   searchDrop.hidden = false;
   searchDrop.innerHTML = '<div class="drop-loading">Searching…</div>';
   try {
-    const res   = await fetch(`${API}/search?q=${encodeURIComponent(q)}`);
-    const books = await res.json();
+    const { data: books } = await ozApi(`/books/search?q=${encodeURIComponent(q)}`);
     renderDropdown(books);
   } catch {
     searchDrop.innerHTML = '<div class="drop-empty">Search unavailable.</div>';
@@ -156,7 +142,7 @@ function renderDropdown(books) {
   searchDrop.querySelectorAll('.drop-add').forEach((btn, i) => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      if (!token) { window.location.href = '/Login/'; return; }
+      if (!currentUser) { window.location.href = OZ_CONFIG.routes.login; return; }
 
       // Optimistic UI — update button instantly
       btn.disabled = true;
@@ -180,18 +166,11 @@ function renderDropdown(books) {
 
 // ── Shelf API ─────────────────────────────────────────
 async function addToShelf(book) {
-  await fetch(`${API}/shelf`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body:    JSON.stringify(book),
-  });
+  await ozApi('/books/shelf', { method: 'POST', body: book });
 }
 
 async function removeFromShelf(olId) {
-  await fetch(`${API}/shelf?id=${encodeURIComponent(olId)}`, {
-    method:  'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  await ozApi(`/books/shelf?id=${encodeURIComponent(olId)}`, { method: 'DELETE' });
 }
 
 // ── Feed ──────────────────────────────────────────────
@@ -283,7 +262,7 @@ async function loadFeed() {
   const grid  = document.getElementById('feed-masonry');
   const empty = document.getElementById('empty-state');
 
-  if (!token) {
+  if (!currentUser) {
     grid.innerHTML = '';
     empty.querySelector('p').textContent = 'Sign in to build your shelf.';
     empty.classList.remove('hidden');
@@ -291,8 +270,7 @@ async function loadFeed() {
   }
 
   try {
-    const res   = await fetch(`${API}/feed`, { headers: { Authorization: `Bearer ${token}` } });
-    const books = await res.json();
+    const { data: books } = await ozApi('/books/feed');
 
     if (!books.length) {
       grid.innerHTML = '';
@@ -324,4 +302,8 @@ document.addEventListener('keydown', e => {
 });
 
 // ── Boot ──────────────────────────────────────────────
-loadFeed();
+OZ_SESSION.fetchMe().then(user => {
+  currentUser = user;
+  renderHeader();
+  loadFeed();
+});
