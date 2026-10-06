@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OZ Library — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+
+  <div class="scene">
+    <div class="card" id="card">
+
+      <!-- RECTO : couverture OZ -->
+      <div class="card-front">
+        <div class="front-content">
+          <div class="logo">OZ</div>
+          <p class="cover-label">Welcome to</p>
+          <h1 class="cover-title">OZ Library</h1>
+          <button class="open-btn" id="openBtn">
+            Click to open <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VERSO : login / sign up -->
+      <div class="card-back">
+
+        <!-- Login View -->
+        <div class="back-view active" id="loginView">
+          <h2 class="form-title">Login</h2>
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <input type="text" id="username" placeholder="Username or Email" required>
+            </div>
+            <div class="field field-password">
+              <div class="input-wrap">
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="button" class="toggle-pw" tabindex="-1" data-target="password" aria-label="Show password">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <a href="#" class="forgot">Forgot password?</a>
+            </div>
+            <p id="message" class="form-message"></p>
+            <button type="submit" class="btn-action">Log in</button>
+          </form>
+          <div class="or-divider"><span>OR</span></div>
+          <button class="btn-google">
+            <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+              <path fill="none" d="M0 0h48v48H0z"/>
+            </svg>
+            Continue with Google
+          </button>
+          <p class="switch-link">No account? <a href="#" id="goSignup">Sign up</a></p>
+        </div>
+
+        <!-- Sign Up View -->
+        <div class="back-view" id="signupView">
+          <h2 class="form-title">Create account</h2>
+          <form id="signupForm" novalidate>
+            <div class="field">
+              <input type="text" id="fullname" placeholder="Full name" required>
+            </div>
+            <div class="field">
+              <input type="email" id="signupEmail" placeholder="Email" required>
+            </div>
+            <div class="field">
+              <div class="input-wrap">
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <button type="button" class="toggle-pw" tabindex="-1" data-target="signupPassword" aria-label="Show password">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <input type="text" id="dob" placeholder="Date of birth" required>
+            </div>
+            <p id="signupMessage" class="form-message"></p>
+            <button type="submit" class="btn-action">Sign up</button>
+          </form>
+          <p class="switch-link">Already a member? <a href="#" id="goLogin">Log in</a></p>
+        </div>
+
+        <!-- Forgot Password View -->
+        <div class="back-view" id="forgotView">
+          <h2 class="form-title">Forgot password?</h2>
+          <p class="verify-text" style="text-align:center; margin-bottom: 24px;">Enter your email and we'll send you a reset link.</p>
+          <form id="forgotForm" novalidate>
+            <div class="field">
+              <input type="email" id="forgotEmail" placeholder="Email" required>
+            </div>
+            <p id="forgotMessage" class="form-message"></p>
+            <button type="submit" class="btn-action">Send reset link</button>
+          </form>
+          <p class="switch-link"><a href="#" id="goLoginFromForgot">Back to Log in</a></p>
+        </div>
+
+        <!-- Verify Email View -->
+        <div class="back-view" id="verifyView">
+          <div class="verify-content">
+            <svg class="verify-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="3"/>
+              <path d="M2 7l10 7 10-7"/>
+            </svg>
+            <h2 class="form-title">Check your inbox</h2>
+            <p class="verify-text">We sent a verification link to<br><span id="verifyEmail"></span></p>
+            <button class="btn-action" id="resendBtn">Resend email</button>
+            <p class="switch-link"><a href="#" id="goLoginFromVerify">Back to Log in</a></p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

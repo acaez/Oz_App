@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OZ Library — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .dashboard-card {
+      background: linear-gradient(155deg, rgba(246,243,238,0.72) 0%, rgba(232,226,216,0.65) 40%, rgba(216,208,196,0.60) 75%, rgba(200,191,176,0.55) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 16px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 12px 48px rgba(0,0,0,0.55);
+      width: 450px;
+      padding: 48px 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .dashboard-logo {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: 0.2em;
+    }
+    .dashboard-welcome {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #777;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .dashboard-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .dashboard-sub {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: #999;
+      margin-bottom: 12px;
+    }
+    .btn-logout {
+      width: 100%;
+      padding: 13px 0;
+      background: rgba(255,255,255,0.38);
+      border: none;
+      border-radius: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body>
+
+  <div class="scene">
+    <div class="dashboard-card">
+      <div class="dashboard-logo">OZ</div>
+      <p class="dashboard-welcome">Welcome back</p>
+      <p class="dashboard-name" id="dashName"></p>
+      <p class="dashboard-sub">You're now logged in to OZ Library.</p>
+      <button class="btn-action" style="width:100%; margin-top:8px;" onclick="window.location.href='index.html'">
+        Go to app →
+      </button>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <script>
+    const pseudo    = localStorage.getItem('userPseudo');
+    const avatarUrl = localStorage.getItem('userAvatarUrl');
+    if (!pseudo) { window.location.href = 'index.html'; }
+    document.getElementById('dashName').textContent = pseudo || 'User';
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('userPseudo');
+      localStorage.removeItem('userAvatarUrl');
+      window.location.href = 'index.html';
+    });
+  </script>
+
+</body>
+</html>
