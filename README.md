@@ -50,14 +50,14 @@ npm run db:init
 
 ### Emails (Gmail SMTP)
 
-Dans `backend/.env` : `SMTP_USER` (ton adresse Gmail) + `SMTP_PASS` (un [mot de passe d'application](https://myaccount.google.com/apppasswords), validation en 2 étapes requise), puis `./scripts/service.sh restart`. Les logs doivent afficher `[Mail] Gmail SMTP ready`.
+Dans `backend/.env` : `GMAIL_USER` (ton adresse Gmail) + `GMAIL_APP_PASSWORD` (un [mot de passe d'application](https://myaccount.google.com/apppasswords), validation en 2 étapes requise), puis `./scripts/service.sh restart`. Les logs doivent afficher `[Mail] Gmail SMTP ready`.
 
-| | SMTP configuré | Sans SMTP |
+| | Gmail configuré | Sans Gmail |
 |---|---|---|
 | Inscription | email de vérification (sauf `EMAIL_VERIFICATION=false`) | compte actif tout de suite |
 | Forgot password | email avec lien de reset (1 h) | redirection directe vers la page de reset (hors prod) |
 
-Pour envoyer un email depuis un autre module : `require('../../shared/mailer').sendMail({ to, subject, html })`.
+Pour envoyer un email depuis un autre module : `require('../../shared/mailer').sendMail({ to, subject, html })` — passer toute donnée utilisateur dans `escapeHtml()`.
 
 ## Flux
 

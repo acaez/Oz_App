@@ -1,22 +1,30 @@
 const nodemailer = require('nodemailer');
 
-// Gmail SMTP — SMTP_PASS is a Google "App password" (16 chars), not the account password.
-// Without SMTP_USER/SMTP_PASS the mailer is disabled and callers fall back to dev behaviour.
+// Gmail SMTP — GMAIL_APP_PASSWORD is a Google
+// "App password" (16 chars), not the account password.
+// Without GMAIL_USER/GMAIL_APP_PASSWORD the mailer is disabled and callers fall back to dev behaviour.
 
-const { SMTP_USER, SMTP_PASS, MAIL_FROM } = process.env;
+const { GMAIL_USER, GMAIL_APP_PASSWORD, MAIL_FROM } = process.env;
 
-const transporter = SMTP_USER && SMTP_PASS
-  ? nodemailer.createTransport({ service: 'gmail', auth: { user: SMTP_USER, pass: SMTP_PASS } })
+const transporter = GMAIL_USER && GMAIL_APP_PASSWORD
+  ? nodemailer.createTransport({ service: 'gmail', auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD } })
   : null;
 
 const isMailEnabled = () => !!transporter;
 
 if (transporter)
   transporter.verify()
-    .then(() => console.log(`[Mail] Gmail SMTP ready (${SMTP_USER})`))
+    .then(() => console.log(`[Mail] Gmail SMTP ready (${GMAIL_USER})`))
     .catch(err => console.error('[Mail] SMTP login failed:', err.message));
 else
-  console.log('[Mail] SMTP not configured — emails disabled');
+  console.log('[Mail] Gmail not configured — emails disabled');
+
+// Use on any user-provided value injected into an email
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
 
 function layout(title, body, ctaLabel, ctaUrl) {
   return `
@@ -31,7 +39,7 @@ function layout(title, body, ctaLabel, ctaUrl) {
 
 async function sendMail({ to, subject, html }) {
   if (!transporter) throw new Error('Mailer not configured');
-  await transporter.sendMail({ from: MAIL_FROM || `OZ Library <${SMTP_USER}>`, to, subject, html });
+  await transporter.sendMail({ from: MAIL_FROM || `OZ Library <${GMAIL_USER}>`, to, subject, html });
 }
 
 function sendVerificationEmail(to, url) {
@@ -50,4 +58,4 @@ function sendResetEmail(to, url) {
   });
 }
 
-module.exports = { isMailEnabled, sendMail, sendVerificationEmail, sendResetEmail };
+module.exports = { isMailEnabled, escapeHtml, sendMail, sendVerificationEmail, sendResetEmail };
