@@ -2,11 +2,15 @@ const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const crypto = require('crypto');
 const User   = require('./user.model');
+const Mail   = require('../../shared/mailer');
 
 const SALT_ROUNDS = 12;
-// Local dev without email service: links go straight to the browser
-const DEV_NO_EMAIL = () => process.env.EMAIL_VERIFICATION === 'false' && process.env.NODE_ENV !== 'production';
 const APP_URL     = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
+const IS_PROD     = process.env.NODE_ENV === 'production';
+
+// Email verification only makes sense when emails can actually be sent
+const verificationRequired = () => Mail.isMailEnabled() && process.env.EMAIL_VERIFICATION !== 'false';
+const verifyUrl = (token) => `${APP_URL}/auth/verify.html?token=${token}`;
 
 // ── Cookie helpers ─────────────────────────────────────────────────────────────
 
@@ -67,14 +71,14 @@ async function register(req, res) {
 
     await User.createUser({ pseudo, email, passwordHash, verifyToken });
 
-    // No email service configured → account is active right away
-    if (process.env.EMAIL_VERIFICATION === 'false') {
+    if (!verificationRequired()) {
       await User.setEmailVerified(verifyToken);
       return res.status(201).json({ message: 'Account created. You can now log in.', verified: true });
     }
 
-    // TODO: send verification email with verifyToken
-    console.log(`[Auth] Verify link for ${email}: ${APP_URL}/auth/verify.html?token=${verifyToken}`);
+    // Account exists even if sending fails → user can use "Resend email"
+    Mail.sendVerificationEmail(email, verifyUrl(verifyToken))
+      .catch(err => console.error('[register] verification email failed:', err.message));
 
     return res.status(201).json({ message: 'Account created. Please check your email to verify.' });
   } catch (err) {
@@ -178,12 +182,21 @@ async function forgotPassword(req, res) {
       const resetToken   = crypto.randomBytes(32).toString('hex');
       const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1h
       await User.setResetToken(user.id, resetToken, resetExpires);
-      // TODO: sendResetEmail(user.email, resetToken)
       const resetUrl = `/auth/reset.html?token=${resetToken}`;
-      if (DEV_NO_EMAIL())
+      if (Mail.isMailEnabled()) {
+        try {
+          await Mail.sendResetEmail(user.email, APP_URL + resetUrl);
+        } catch (err) {
+          console.error('[forgotPassword] reset email failed:', err.message);
+          return res.status(502).json({ error: 'Email could not be sent. Please try again later.' });
+        }
+      } else if (!IS_PROD) {
+        // Local dev without email service → hand the link straight to the browser
         return res.json({ message: 'Redirecting to reset page…', resetUrl });
-      console.log(`[Auth] Reset link for ${user.email}: ${APP_URL}${resetUrl}`);
-    } else if (DEV_NO_EMAIL()) {
+      } else {
+        console.error('[forgotPassword] SMTP not configured, reset email not sent');
+      }
+    } else if (!Mail.isMailEnabled() && !IS_PROD) {
       return res.status(404).json({ error: 'No account with this email or pseudo.' });
     }
     // Always return success — no user enumeration
@@ -230,12 +243,11 @@ async function resendVerification(req, res) {
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
   try {
-    const user = await User.findUserByEmail(email);
-    if (user && !user.is_verified) {
+    const user = await User.findUserByLogin(email);
+    if (user && !user.is_verified && Mail.isMailEnabled()) {
       const verifyToken = crypto.randomBytes(32).toString('hex');
       await User.setNewVerifyToken(user.id, verifyToken);
-      // TODO: sendVerificationEmail(email, verifyToken)
-      console.log(`[Auth] Verify link for ${email}: ${APP_URL}/auth/verify.html?token=${verifyToken}`);
+      await Mail.sendVerificationEmail(user.email, verifyUrl(verifyToken));
     }
     return res.json({ message: 'If this email is pending verification, a new link has been sent.' });
   } catch (err) {

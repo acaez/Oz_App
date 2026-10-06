@@ -12,7 +12,8 @@ Oz_App/
 │   │   ├── schema.sql        # users + shelf
 │   │   └── init.js           # npm run db:init
 │   ├── shared/
-│   │   └── requireAuth.js    # middlewares requireAuth / require2FAPending
+│   │   ├── requireAuth.js    # middlewares requireAuth / require2FAPending
+│   │   └── mailer.js         # Gmail SMTP (nodemailer)
 │   └── modules/
 │       ├── auth/             # /api/auth/*  /api/tfa/*   (ex plug-Auth-back)
 │       └── books/            # /api/books/*              (ex Landing)
@@ -47,7 +48,16 @@ npm run db:init
 ./scripts/service.sh install
 ```
 
-`EMAIL_VERIFICATION=false` : les comptes sont actifs dès l'inscription (aucun service d'email n'est branché pour l'instant).
+### Emails (Gmail SMTP)
+
+Dans `backend/.env` : `SMTP_USER` (ton adresse Gmail) + `SMTP_PASS` (un [mot de passe d'application](https://myaccount.google.com/apppasswords), validation en 2 étapes requise), puis `./scripts/service.sh restart`. Les logs doivent afficher `[Mail] Gmail SMTP ready`.
+
+| | SMTP configuré | Sans SMTP |
+|---|---|---|
+| Inscription | email de vérification (sauf `EMAIL_VERIFICATION=false`) | compte actif tout de suite |
+| Forgot password | email avec lien de reset (1 h) | redirection directe vers la page de reset (hors prod) |
+
+Pour envoyer un email depuis un autre module : `require('../../shared/mailer').sendMail({ to, subject, html })`.
 
 ## Flux
 
@@ -55,12 +65,10 @@ npm run db:init
 /  → /feed/
 /auth/  ── login ──┬── OK ───────────────→ /feed/
                    └── 2FA_REQUIRED → code TOTP → /feed/
-        ── signup → lien de vérification (loggé dans la console du serveur) → /auth/verify.html
-        ── forgot → lien de reset (loggé)                                   → /auth/reset.html
+        ── signup → email de vérification → /auth/verify.html
+        ── forgot → email de reset          → /auth/reset.html
 /feed/  → GET /api/auth/me ; si 401 → mode invité (bouton "Sign in")
 ```
-
-Pas encore d'envoi d'email : les liens de vérification / reset sont affichés dans les logs du serveur (`[Auth] Verify link …`).
 
 ## API
 
