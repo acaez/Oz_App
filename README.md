@@ -27,12 +27,27 @@ Oz_App/
 
 ## Démarrer
 
+L'app tourne en **service macOS** : elle démarre à l'ouverture de session, redémarre si elle plante, et se recharge à chaque modif de `backend/` ou `frontend/`. Postgres tourne aussi en service (`brew services`).
+
+→ **http://localhost:3000**
+
 ```bash
-npm run setup                 # installe les deps du backend
-cp backend/.env.example backend/.env   # puis remplir la DB + secrets JWT
-npm run db:init               # crée les tables (idempotent)
-npm run dev                   # http://localhost:3000 — redémarre si backend/ ou frontend/ change
+./scripts/service.sh logs       # voir les logs (logs/app.log)
+./scripts/service.sh restart    # après une modif du .env
+./scripts/service.sh status | stop | uninstall
 ```
+
+Première installation sur une autre machine :
+
+```bash
+brew install postgresql@17 && brew services start postgresql@17 && createdb oz_db
+npm run setup
+cp backend/.env.example backend/.env   # DB_USER = ton user mac, secrets JWT, EMAIL_VERIFICATION=false en local
+npm run db:init
+./scripts/service.sh install
+```
+
+`EMAIL_VERIFICATION=false` : les comptes sont actifs dès l'inscription (aucun service d'email n'est branché pour l'instant).
 
 ## Flux
 

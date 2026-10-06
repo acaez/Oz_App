@@ -65,11 +65,19 @@ async function register(req, res) {
 
     await User.createUser({ pseudo, email, passwordHash, verifyToken });
 
+    // No email service configured → account is active right away
+    if (process.env.EMAIL_VERIFICATION === 'false') {
+      await User.setEmailVerified(verifyToken);
+      return res.status(201).json({ message: 'Account created. You can now log in.', verified: true });
+    }
+
     // TODO: send verification email with verifyToken
     console.log(`[Auth] Verify link for ${email}: ${APP_URL}/auth/verify.html?token=${verifyToken}`);
 
     return res.status(201).json({ message: 'Account created. Please check your email to verify.' });
   } catch (err) {
+    if (err.code === '23505') // unique violation (pseudo or email)
+      return res.status(409).json({ error: 'Pseudo or email already taken' });
     console.error('[register]', err.message);
     return res.status(500).json({ error: 'Internal server error' });
   }

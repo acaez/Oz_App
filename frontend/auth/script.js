@@ -221,7 +221,13 @@ document.getElementById('signupForm').addEventListener('submit', async function 
       method: 'POST',
       body:   { pseudo, email, password, dob },
     });
-    if (ok) {
+    if (ok && data.verified) {
+      // Account already active → back to login, email prefilled
+      document.getElementById('username').value = email;
+      switchView('signupView', 'loginView');
+      showSuccess('message', 'Account created! You can now log in.');
+      document.getElementById('password').focus();
+    } else if (ok) {
       document.getElementById('verifyEmail').textContent = email;
       switchView('signupView', 'verifyView');
     } else {
