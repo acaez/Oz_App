@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OZ — Library</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/Feed/feed.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <!-- Left: hamburger + logo -->
+      <div class="logo-group">
+        <button class="btn-menu" id="btn-menu" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <a href="/Feed/" class="logo">OZ</a>
+      </div>
+
+      <!-- Centre: search -->
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
+          <path d="m14 14 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search books, authors, genres…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="search-clear" class="search-clear hidden" aria-label="Clear search">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M12 4 4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="search-dropdown" id="search-dropdown" hidden></div>
+      </div>
+
+      <!-- Right: actions -->
+      <div class="header-actions">
+
+        <!-- Add to shelf -->
+        <button class="btn-add" id="btn-add" title="Shelf">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M5 3h10a1 1 0 011 1v13l-6-3-6 3V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+        </button>
+
+        <!-- Profile (shown when logged in) -->
+        <div class="profile-wrap" id="profile-wrap">
+          <button class="btn-profile" id="btn-profile" aria-label="Account">A</button>
+          <div class="profile-dropdown" id="profile-dropdown" role="menu">
+            <div class="dropdown-user">
+              <span class="dropdown-name" id="dropdown-name">—</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" onclick="logout()">Sign out</button>
+          </div>
+        </div>
+
+        <!-- Login (shown when logged out) -->
+        <a href="/Login/" class="btn-login" id="btn-login" title="Sign in">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M13 7l3 3-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 10H7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M7 4H5a1 1 0 00-1 1v10a1 1 0 001 1h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ── FILTER STRIP ────────────────────────────── -->
+  <div class="filters-strip">
+    <div class="filters-inner">
+      <button class="filter-pill active" data-genre="all">All</button>
+      <button class="filter-pill" data-genre="fiction">Fiction</button>
+      <button class="filter-pill" data-genre="non-fiction">Non-fiction</button>
+      <button class="filter-pill" data-genre="science">Science</button>
+      <button class="filter-pill" data-genre="philosophy">Philosophy</button>
+    </div>
+  </div>
+
+  <!-- ── FEED ───────────────────────────────────── -->
+  <main class="feed-main">
+    <div class="feed-masonry" id="feed-masonry"></div>
+
+    <div class="empty-state hidden" id="empty-state">
+      <p>No books found.</p>
+    </div>
+  </main>
+
+  <!-- ── SIDEBAR ──────────────────────────────────── -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <button class="btn-menu sidebar-close" id="sidebar-close" aria-label="Close menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </aside>
+
+  <!-- ── ADD TO SHELF MODAL ───────────────────────── -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add to shelf</h3>
+        <button class="modal-close" id="modal-close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M12 4 4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <p class="modal-sub">Shelf management coming soon.</p>
+    </div>
+  </div>
+
+  <script src="/Feed/feed.js"></script>
+</body>
+</html>
